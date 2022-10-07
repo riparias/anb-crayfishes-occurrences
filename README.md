@@ -49,4 +49,4 @@ The repository structure is based on [Cookiecutter Data Science](http://drivenda
 
 ## License
 
-[MIT License](LICENSE) for the code and documentation in this repository. The included data is released under another license.
+[MIT License](https://github.com/riparias/anb-crayfishes-occurrences/blob/main/LICENSE) for the code and documentation in this repository. The included data is released under another license.
