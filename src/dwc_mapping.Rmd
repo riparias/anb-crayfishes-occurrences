@@ -185,3 +185,13 @@ dwc_occurrence <- DBI::dbGetQuery(con, dwc_occurrence_sql)
 message("DONE")
 ```
 
+# Save data to CSV
+
+```{r save_csv}
+write_csv(dwc_event, here::here("data", "processed", "event.csv"), na = "")
+write_csv(
+  dwc_occurrence, here::here("data", "processed", "occurrence.csv"),
+  na = ""
+)
+```
+
