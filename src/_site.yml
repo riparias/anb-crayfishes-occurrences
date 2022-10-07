@@ -1,4 +1,4 @@
-name: "Monitoring crayfishes (temp) "
+name: "Targeted monitoring of invasice alien crayfishes in LIFE RIPARIAS areas in Flanders"
 output_dir: "../docs"
 include: ["static"]
 navbar:

@@ -1,6 +1,6 @@
 ---
 title: "Darwin Core mapping"
-subtitle: "For: monitoring crayfishes in LIFE RIPARIAS areas"
+subtitle: "For: monitoring of invasive alien crayfishes in the Flemish part of the LIFE RIPARIAS areas"
 author:
 - Damiano Oldoni
 date: "`r Sys.Date()`"
@@ -12,8 +12,6 @@ output:
     toc_depth: 3
     toc_float: yes
 ---
-
-<!-- For examples, see https://github.com/trias-project/checklist-recipe/wiki/Examples -->
 
 # Setup 
 
@@ -56,7 +54,7 @@ library(digest)         # To create hashes
 
 Create a data frame `occurrences` from the source data:
 
-```{r}
+```{r read_data}
 occurrences <- readxl::read_excel(
   path = here("data", "raw", "rivierkreeften_ANB september 2022.xlsx")) %>%
   mutate(datum = as.character(.data$datum))
@@ -194,4 +192,3 @@ write_csv(
   na = ""
 )
 ```
-
