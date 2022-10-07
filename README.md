@@ -6,7 +6,7 @@ This repository contains the functionality to standardize the crayfishes data fr
 
 ## Workflow
 
-[source data](data/raw) → Darwin Core [mapping script](src/dwc_mapping.Rmd) → generated [Darwin Core files](data/processed)
+[source data](https://github.com/riparias/anb-crayfishes-occurrences/tree/main/data/raw) → Darwin Core [mapping script](https://riparias.github.io/anb-crayfishes-occurrences/dwc_mapping.html) → generated [Darwin Core files](https://github.com/riparias/anb-crayfishes-occurrences/tree/main/data/processed)
 
 
 ## Published dataset
