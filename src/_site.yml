@@ -1,0 +1,16 @@
+name: "Monitoring crayfishes (temp) "
+output_dir: "../docs"
+include: ["static"]
+navbar:
+  title: "anb-crayfishes-occurrences"
+  left:
+    - text: "Darwin Core mapping"
+      href: dwc_mapping.html
+  right:
+    - icon: fa-github fa-lg
+      href: https://github.com/riparias/anb-crayfishes-occurrences
+output:
+  html_document:
+    theme: yeti
+    df_print: paged
+    css: "static/css/riparias.css"
