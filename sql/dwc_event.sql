@@ -33,4 +33,4 @@ SELECT DISTINCT
   -- Remove events where the trap could not be placed due to drought (2),
   -- the place was private and so not reachable (3)
   -- the trap was stolen (4)
-  o."code" < 2
+  o."code" <= 1
