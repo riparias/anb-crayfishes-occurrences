@@ -57,7 +57,8 @@ Create a data frame `occurrences` from the source data:
 ```{r read_data}
 occurrences <- readxl::read_excel(
   path = here("data", "raw", "rivierkreeften_ANB september 2022.xlsx")) %>%
-  mutate(datum = as.character(.data$datum))
+  mutate(datum = as.character(.data$datum),
+         x = as.character(x))
 ```
 
 Preview data:
@@ -102,6 +103,51 @@ Set `n` to 0 if `NA`:
 occurrences <- 
   occurrences %>%
   mutate(n = dplyr::if_else(is.na(.data$n), 0, .data$n))
+```
+
+## Improve location identifiers
+
+Some location identifiers are just numbers. Notice that they all have a non empty description (column `omschrijving`):
+
+```{r supect_locaties}
+occurrences %>%
+  dplyr::filter(!grepl("\\D", locatie)) %>%
+  dplyr::select(locatie, omschrijving)
+```
+
+Create column `location_improved` composed of the first capital letter of each word in `omschrijving` and the number in `locatie`:
+
+```{r improve_locations}
+occurrences <-
+  occurrences %>%
+  dplyr::mutate(
+    location_improved = if_else(
+      !grepl("\\D", locatie),
+      paste0(
+        paste0(unlist(stringr::str_extract_all(omschrijving, 
+                                              pattern = "[A-Z]")),
+               collapse = ""),
+        locatie, collapse = ""),
+      locatie
+    )
+)
+```
+
+Mapping of improved locations:
+
+```{r show_results_improved}
+occurrences %>%
+  dplyr::filter(!grepl("\\D", locatie))
+  dplyr::select(locatie, omschrijving, location_improved)
+```
+
+Other locations should not be changed. Example:
+
+```{r show_results_improved}
+occurrences %>%
+  filter(grepl("\\D", locatie)) %>% 
+  dplyr::select(locatie, omschrijving, location_improved) %>%
+  head(10)
 ```
 
 ## Change coordinate system
