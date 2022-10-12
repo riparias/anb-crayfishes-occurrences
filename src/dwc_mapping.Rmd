@@ -150,16 +150,53 @@ occurrences %>%
   head(10)
 ```
 
+## Clean geographical coordinates
+
+Some rows contain suspicious coordinates:
+
+```{r suspicious_coords}
+occurrences %>%
+  dplyr::filter(locatie == as.numeric(locatie)) %>%
+  distinct(x, y)
+```
+s
+The decimal point, if missing, has to be set after six digits from left:
+
+```{r x_y}
+# add point after six digits
+occurrences$x_improved <- gsub("^(.{6})(.*)$",
+                      "\\1\\.\\2",
+                      occurrences$x)
+occurrences$y_improved <- gsub("^(.{6})(.*)$",
+                      "\\1\\.\\2",
+                      occurrences$y)
+# remove duplicate points
+occurrences$x_improved <- gsub("(\\.)\\1+", "\\1", occurrences$x_improved)
+occurrences$y_improved <- gsub("(\\.)\\1+", "\\1", occurrences$y_improved)
+```
+
+See changes:
+
+```{r show_changes}
+occurrences %>% select(x, y, x_improved, y_improved)
+```
+
 ## Change coordinate system
 
 Data are provided in Belgian Lambert72 ([EPSG 31370](https://epsg.io/31370)) coordinates. DwC accepts data in WGS84 ([EPSG 4326](https://epsg.io/4326)) only.
 
 ```{r change_crs}
 occurrences <- 
-  occurrences %>% 
-  st_as_sf(crs = st_crs(31370), coords = c("x", "y")) %>%
+  occurrences %>%
+  # transform to numeric
+  dplyr::mutate(across(dplyr::ends_with("improved"), as.numeric)) %>%
+  # transform to a geospatial dataframe
+  st_as_sf(crs = st_crs(31370), coords = c("x_improved", "y_improved")) %>%
+  # transform corodinate reference system
   st_transform(crs = 4326)
+# retrieve coordinates from geospatial dataframe
 coords <- dplyr::as_tibble(st_coordinates(occurrences))
+# convert back to standard data.frame attaching new coordinates
 occurrences <- 
   dplyr::as_tibble(occurrences) %>% 
   dplyr::bind_cols(coords) %>%
