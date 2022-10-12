@@ -25,8 +25,8 @@ SELECT DISTINCT
   printf('%.5f', ROUND(o."X", 5))       AS decimalLongitude,
   'WGS84'                               AS geodeticDatum,
   '30'                                  AS coordinateUncertaintyInMeters,
-  o."Y"                                 AS verbatimLatitude,
-  o."X"                                 AS verbatimLongitude,
+  o."y_lambert"                         AS verbatimLatitude,
+  o."x_lambert"                         AS verbatimLongitude,
   'EPSG:31370'                          AS verbatimSRS
   FROM occurrences AS o
   WHERE
