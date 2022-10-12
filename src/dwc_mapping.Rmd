@@ -133,12 +133,13 @@ occurrences <-
 )
 ```
 
-Mapping of improved locations:
+Example of the improved locations:
 
 ```{r show_results_improved}
-occurrences %>%
-  dplyr::filter(!grepl("\\D", locatie))
-  dplyr::select(locatie, omschrijving, location_improved)
+occurrences %>% 
+  filter(!grepl("\\D", locatie)) %>%
+  select(locatie, omschrijving, location_improved) %>%
+  head(10)
 ```
 
 Other locations should not be changed. Example:
