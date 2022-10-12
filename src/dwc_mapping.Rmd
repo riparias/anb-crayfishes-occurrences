@@ -144,7 +144,7 @@ occurrences %>%
 
 Other locations should not be changed. Example:
 
-```{r show_results_improved}
+```{r show_results_others}
 occurrences %>%
   filter(grepl("\\D", locatie)) %>% 
   dplyr::select(locatie, omschrijving, location_improved) %>%
@@ -160,7 +160,7 @@ occurrences %>%
   dplyr::filter(locatie == as.numeric(locatie)) %>%
   distinct(x, y)
 ```
-s
+
 The decimal point, if missing, has to be set after six digits from left:
 
 ```{r x_y}
@@ -189,6 +189,11 @@ Data are provided in Belgian Lambert72 ([EPSG 31370](https://epsg.io/31370)) coo
 ```{r change_crs}
 occurrences <- 
   occurrences %>%
+  # remove x and y as they contain errors
+  select(-c(x, y)) %>%
+  # create duplicate of x_improved and y_improved using lambert as suffix
+  mutate(x_lambert = x_improved,
+         y_lambert = y_improved) %>%
   # transform to numeric
   dplyr::mutate(across(dplyr::ends_with("improved"), as.numeric)) %>%
   # transform to a geospatial dataframe
