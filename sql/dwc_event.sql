@@ -14,7 +14,7 @@ SELECT DISTINCT
   'Targeted monitoring of crustacea by ANB, Belgium' AS datasetName,
   'targeted monitoring'                 AS samplingProtocol,
 -- EVENT
-  o."locatie" || ':' || o."datum"       AS eventID,
+  o."location_improved" || ':' || o."datum"       AS eventID,
   date(o."datum")                       AS eventDate,
 -- LOCATION
   'Europe'                              AS continent,
