@@ -3,11 +3,11 @@ Created by Damiano Oldoni (INBO)
 */
 
 SELECT
-  o."locatie" || ':' || o."datum"       AS eventID,
+  o."location" || ':' || o."datum"       AS eventID,
 -- RECORD-LEVEL
   'HumanObservation'                    AS basisOfRecord,
 -- OCCURRENCE
-  o."locatie" || ':' || o."datum" || ':' || o."species_name_hash" AS occurrenceID,
+  o."location" || ':' || o."datum" || ':' || o."species_name_hash" AS occurrenceID,
   o."opmerking"                         AS occurrenceRemarks,
   CASE
     WHEN o."n" > 0  THEN o."n"

@@ -120,8 +120,9 @@ Create column `location_improved` composed of the first capital letter of each w
 ```{r improve_locations}
 occurrences <-
   occurrences %>%
-  dplyr::mutate(
-    location_improved = if_else(
+  rowwise() %>%
+  mutate(
+    location = if_else(
       !grepl("\\D", locatie),
       paste0(
         paste0(unlist(stringr::str_extract_all(omschrijving, 
