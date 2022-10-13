@@ -11,7 +11,7 @@ SELECT DISTINCT
   'http://www.inbo.be/en/norms-for-data-use' AS accessRights,
   ''                                    AS datasetID,
   'ANB'                                 AS institutionCode,
-  'Targeted monitoring of crustacea by ANB, Belgium' AS datasetName,
+  'Monitoring of invasive alien crayfishes in the Flemish part of the LIFE RIPARIAS areas' AS datasetName,
   'targeted monitoring'                 AS samplingProtocol,
 -- EVENT
   o."location" || ':' || o."datum"      AS eventID,
