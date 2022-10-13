@@ -16,12 +16,12 @@ output:
 # Setup 
 
 ```{r setup, include = FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = TRUE, message = FALSE)
 ```
 
-Install required libraries (only if the libraries have not been installed before):
+Install required packages (only if the packages have not been installed before):
 
-```{r}
+```{r install_pkgs}
 installed <- rownames(installed.packages())
 required <- c("tidyverse",
               "tidylog",
@@ -30,16 +30,17 @@ required <- c("tidyverse",
               "sf",
               "DBI",
               "RSQLite",
-              "digest"
+              "digest",
+              "testthat"
 )
 if (!all(required %in% installed)) {
   install.packages(required[!required %in% installed])
 }
 ```
 
-Load libraries:
+Load packages:
 
-```{r message = FALSE}
+```{r load_pkgs}
 library(tidyverse)      # To do data science
 library(tidylog)        # To provide feedback on dplyr functions
 library(here)           # To find files
@@ -48,6 +49,7 @@ library(sf)             # To convert coordinate systems
 library(DBI)            # To work with databases
 library(RSQLite)        # To work with SQLite databases in R
 library(digest)         # To create hashes
+library(testthat)       # To perform tests
 ```
 
 # Read source data
@@ -63,7 +65,7 @@ occurrences <- readxl::read_excel(
 
 Preview data:
 
-```{r}
+```{r preview_raw_data}
 occurrences %>% head(n = 5)
 ```
 
@@ -105,6 +107,14 @@ occurrences <-
   mutate(n = dplyr::if_else(is.na(.data$n), 0, .data$n))
 ```
 
+Example tidy transformation:
+
+```{r example_tidy_data}
+occurrences %>% 
+  select(locatie, species, n) %>%
+  head(20)
+```
+
 ## Improve location identifiers
 
 Some location identifiers are just numbers. Notice that they all have a non empty description (column `omschrijving`):
@@ -112,10 +122,10 @@ Some location identifiers are just numbers. Notice that they all have a non empt
 ```{r supect_locaties}
 occurrences %>%
   dplyr::filter(!grepl("\\D", locatie)) %>%
-  dplyr::select(locatie, omschrijving)
+  dplyr::distinct(locatie, omschrijving)
 ```
 
-Create column `location_improved` composed of the first capital letter of each word in `omschrijving` and the number in `locatie`:
+Create column `location` composed of the first capital letter of each word in `omschrijving` and the number in `locatie`:
 
 ```{r improve_locations}
 occurrences <-
@@ -130,17 +140,16 @@ occurrences <-
                collapse = ""),
         locatie, collapse = ""),
       locatie
-    )
-)
+    )) %>%
+  ungroup()
 ```
 
-Example of the improved locations:
+Improved locations:
 
-```{r show_results_improved}
-occurrences %>% 
+```{r show_results_improved_locations}
+occurrences %>%
   filter(!grepl("\\D", locatie)) %>%
-  select(locatie, omschrijving, location_improved) %>%
-  head(10)
+  distinct(locatie, omschrijving, location)
 ```
 
 Other locations should not be changed. Example:
@@ -148,7 +157,7 @@ Other locations should not be changed. Example:
 ```{r show_results_others}
 occurrences %>%
   filter(grepl("\\D", locatie)) %>% 
-  dplyr::select(locatie, omschrijving, location_improved) %>%
+  dplyr::distinct(locatie, omschrijving, location) %>%
   head(10)
 ```
 
@@ -208,6 +217,11 @@ occurrences <-
   dplyr::as_tibble(occurrences) %>% 
   dplyr::bind_cols(coords) %>%
   dplyr::select(-.data$geometry)
+```
+
+```{r include = FALSE}
+# remove help data.frame, not needed anymore
+remove(coords)
 ```
 
 Preview:
@@ -277,9 +291,8 @@ message("DONE")
 
 ```{r save_csv}
 write_csv(dwc_event, here::here("data", "processed", "event.csv"), na = "")
-write_csv(
-  dwc_occurrence, here::here("data", "processed", "occurrence.csv"),
-  na = ""
+write_csv(dwc_occurrence, here::here("data", "processed", "occurrence.csv"),
+          na = ""
 )
 ```
 
