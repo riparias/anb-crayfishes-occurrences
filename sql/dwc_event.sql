@@ -14,9 +14,10 @@ SELECT DISTINCT
   'Targeted monitoring of crustacea by ANB, Belgium' AS datasetName,
   'targeted monitoring'                 AS samplingProtocol,
 -- EVENT
-  o."locatie" || ':' || o."datum"       AS eventID,
+  o."location" || ':' || o."datum"      AS eventID,
   date(o."datum")                       AS eventDate,
 -- LOCATION
+  o."location"                          AS locationID,
   'Europe'                              AS continent,
   'BE'                                  AS countryCode,
   'Flanders'                            AS stateProvince,
@@ -25,8 +26,8 @@ SELECT DISTINCT
   printf('%.5f', ROUND(o."X", 5))       AS decimalLongitude,
   'WGS84'                               AS geodeticDatum,
   '30'                                  AS coordinateUncertaintyInMeters,
-  o."Y"                                 AS verbatimLatitude,
-  o."X"                                 AS verbatimLongitude,
+  o."y_lambert"                         AS verbatimLatitude,
+  o."x_lambert"                         AS verbatimLongitude,
   'EPSG:31370'                          AS verbatimSRS
   FROM occurrences AS o
   WHERE

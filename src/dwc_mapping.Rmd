@@ -16,12 +16,12 @@ output:
 # Setup 
 
 ```{r setup, include = FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = TRUE, message = FALSE)
 ```
 
-Install required libraries (only if the libraries have not been installed before):
+Install required packages (only if the packages have not been installed before):
 
-```{r}
+```{r install_pkgs}
 installed <- rownames(installed.packages())
 required <- c("tidyverse",
               "tidylog",
@@ -30,16 +30,17 @@ required <- c("tidyverse",
               "sf",
               "DBI",
               "RSQLite",
-              "digest"
+              "digest",
+              "testthat"
 )
 if (!all(required %in% installed)) {
   install.packages(required[!required %in% installed])
 }
 ```
 
-Load libraries:
+Load packages:
 
-```{r message = FALSE}
+```{r load_pkgs}
 library(tidyverse)      # To do data science
 library(tidylog)        # To provide feedback on dplyr functions
 library(here)           # To find files
@@ -48,6 +49,7 @@ library(sf)             # To convert coordinate systems
 library(DBI)            # To work with databases
 library(RSQLite)        # To work with SQLite databases in R
 library(digest)         # To create hashes
+library(testthat)       # To perform tests
 ```
 
 # Read source data
@@ -57,12 +59,13 @@ Create a data frame `occurrences` from the source data:
 ```{r read_data}
 occurrences <- readxl::read_excel(
   path = here("data", "raw", "rivierkreeften_ANB september 2022.xlsx")) %>%
-  mutate(datum = as.character(.data$datum))
+  mutate(datum = as.character(.data$datum),
+         x = as.character(x))
 ```
 
 Preview data:
 
-```{r}
+```{r preview_raw_data}
 occurrences %>% head(n = 5)
 ```
 
@@ -104,20 +107,121 @@ occurrences <-
   mutate(n = dplyr::if_else(is.na(.data$n), 0, .data$n))
 ```
 
+Example tidy transformation:
+
+```{r example_tidy_data}
+occurrences %>% 
+  select(locatie, species, n) %>%
+  head(20)
+```
+
+## Improve location identifiers
+
+Some location identifiers are just numbers. Notice that they all have a non empty description (column `omschrijving`):
+
+```{r supect_locaties}
+occurrences %>%
+  dplyr::filter(!grepl("\\D", locatie)) %>%
+  dplyr::distinct(locatie, omschrijving)
+```
+
+Create column `location` composed of the first capital letter of each word in `omschrijving` and the number in `locatie`:
+
+```{r improve_locations}
+occurrences <-
+  occurrences %>%
+  rowwise() %>%
+  mutate(
+    location = if_else(
+      !grepl("\\D", locatie),
+      paste0(
+        paste0(unlist(stringr::str_extract_all(omschrijving, 
+                                              pattern = "[A-Z]")),
+               collapse = ""),
+        locatie, collapse = ""),
+      locatie
+    )) %>%
+  ungroup()
+```
+
+Improved locations:
+
+```{r show_results_improved_locations}
+occurrences %>%
+  filter(!grepl("\\D", locatie)) %>%
+  distinct(locatie, omschrijving, location)
+```
+
+Other locations should not be changed. Example:
+
+```{r show_results_others}
+occurrences %>%
+  filter(grepl("\\D", locatie)) %>% 
+  dplyr::distinct(locatie, omschrijving, location) %>%
+  head(10)
+```
+
+## Clean geographical coordinates
+
+Some rows contain suspicious coordinates:
+
+```{r suspicious_coords}
+occurrences %>%
+  dplyr::filter(locatie == as.numeric(locatie)) %>%
+  distinct(x, y)
+```
+
+The decimal point, if missing, has to be set after six digits from left:
+
+```{r x_y}
+# add point after six digits
+occurrences$x_improved <- gsub("^(.{6})(.*)$",
+                      "\\1\\.\\2",
+                      occurrences$x)
+occurrences$y_improved <- gsub("^(.{6})(.*)$",
+                      "\\1\\.\\2",
+                      occurrences$y)
+# remove duplicate points
+occurrences$x_improved <- gsub("(\\.)\\1+", "\\1", occurrences$x_improved)
+occurrences$y_improved <- gsub("(\\.)\\1+", "\\1", occurrences$y_improved)
+```
+
+See changes:
+
+```{r show_changes}
+occurrences %>% select(x, y, x_improved, y_improved)
+```
+
 ## Change coordinate system
 
 Data are provided in Belgian Lambert72 ([EPSG 31370](https://epsg.io/31370)) coordinates. DwC accepts data in WGS84 ([EPSG 4326](https://epsg.io/4326)) only.
 
 ```{r change_crs}
 occurrences <- 
-  occurrences %>% 
-  st_as_sf(crs = st_crs(31370), coords = c("x", "y")) %>%
+  occurrences %>%
+  # remove x and y as they contain errors
+  select(-c(x, y)) %>%
+  # create duplicate of x_improved and y_improved using lambert as suffix
+  mutate(x_lambert = x_improved,
+         y_lambert = y_improved) %>%
+  # transform to numeric
+  dplyr::mutate(across(dplyr::ends_with("improved"), as.numeric)) %>%
+  # transform to a geospatial dataframe
+  st_as_sf(crs = st_crs(31370), coords = c("x_improved", "y_improved")) %>%
+  # transform corodinate reference system
   st_transform(crs = 4326)
+# retrieve coordinates from geospatial dataframe
 coords <- dplyr::as_tibble(st_coordinates(occurrences))
+# convert back to standard data.frame attaching new coordinates
 occurrences <- 
   dplyr::as_tibble(occurrences) %>% 
   dplyr::bind_cols(coords) %>%
   dplyr::select(-.data$geometry)
+```
+
+```{r include = FALSE}
+# remove help data.frame, not needed anymore
+remove(coords)
 ```
 
 Preview:
@@ -187,8 +291,16 @@ message("DONE")
 
 ```{r save_csv}
 write_csv(dwc_event, here::here("data", "processed", "event.csv"), na = "")
-write_csv(
-  dwc_occurrence, here::here("data", "processed", "occurrence.csv"),
-  na = ""
+write_csv(dwc_occurrence, here::here("data", "processed", "occurrence.csv"),
+          na = ""
 )
 ```
+
+# Test output
+
+Load tests and run them to validate the data:
+
+```{r run_tests, message = TRUE}
+source(here("tests", "test_dwc_event_occurrence.R"))
+```
+
