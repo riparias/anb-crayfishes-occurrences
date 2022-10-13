@@ -21,7 +21,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = TRUE, message = FALSE)
 
 Install required packages (only if the packages have not been installed before):
 
-```{r install_pkgs}
+```{r install_pkgs, warning = FALSE}
 installed <- rownames(installed.packages())
 required <- c("tidyverse",
               "tidylog",
@@ -40,7 +40,7 @@ if (!all(required %in% installed)) {
 
 Load packages:
 
-```{r load_pkgs}
+```{r load_pkgs, warning = FALSE}
 library(tidyverse)      # To do data science
 library(tidylog)        # To provide feedback on dplyr functions
 library(here)           # To find files
@@ -93,7 +93,7 @@ Pivot data to convert the columns `Pontastacus leptodactylus`, `Pacifastacus len
 occurrences <- 
   occurrences %>%
   tidyr::pivot_longer(
-    cols = dplyr::one_of(ias_crayfishes), 
+    cols = one_of(ias_crayfishes), 
     names_to = "species", 
     values_to = "n"
   )
@@ -104,7 +104,7 @@ Set `n` to 0 if `NA`:
 ```{r na_to_zero}
 occurrences <- 
   occurrences %>%
-  mutate(n = dplyr::if_else(is.na(.data$n), 0, .data$n))
+  mutate(n = if_else(is.na(.data$n), 0, .data$n))
 ```
 
 Example tidy transformation:
@@ -121,8 +121,8 @@ Some location identifiers are just numbers. Notice that they all have a non empt
 
 ```{r supect_locaties}
 occurrences %>%
-  dplyr::filter(!grepl("\\D", locatie)) %>%
-  dplyr::distinct(locatie, omschrijving)
+  filter(!grepl("\\D", locatie)) %>%
+  distinct(locatie, omschrijving)
 ```
 
 Create column `location` composed of the first capital letter of each word in `omschrijving` and the number in `locatie`:
@@ -157,7 +157,7 @@ Other locations should not be changed. Example:
 ```{r show_results_others}
 occurrences %>%
   filter(grepl("\\D", locatie)) %>% 
-  dplyr::distinct(locatie, omschrijving, location) %>%
+  distinct(locatie, omschrijving, location) %>%
   head(10)
 ```
 
@@ -167,21 +167,21 @@ Some rows contain suspicious coordinates:
 
 ```{r suspicious_coords}
 occurrences %>%
-  dplyr::filter(locatie == as.numeric(locatie)) %>%
+  filter(!grepl("\\D", locatie)) %>%
   distinct(x, y)
 ```
 
-The decimal point, if missing, has to be set after six digits from left:
+The decimal separator (`.`), if missing, has to be set after six digits from left:
 
 ```{r x_y}
-# add point after six digits
+# add dot after six digits
 occurrences$x_improved <- gsub("^(.{6})(.*)$",
                       "\\1\\.\\2",
                       occurrences$x)
 occurrences$y_improved <- gsub("^(.{6})(.*)$",
                       "\\1\\.\\2",
                       occurrences$y)
-# remove duplicate points
+# remove duplicate dots
 occurrences$x_improved <- gsub("(\\.)\\1+", "\\1", occurrences$x_improved)
 occurrences$y_improved <- gsub("(\\.)\\1+", "\\1", occurrences$y_improved)
 ```
@@ -205,18 +205,18 @@ occurrences <-
   mutate(x_lambert = x_improved,
          y_lambert = y_improved) %>%
   # transform to numeric
-  dplyr::mutate(across(dplyr::ends_with("improved"), as.numeric)) %>%
+  mutate(across(ends_with("improved"), as.numeric)) %>%
   # transform to a geospatial dataframe
   st_as_sf(crs = st_crs(31370), coords = c("x_improved", "y_improved")) %>%
   # transform corodinate reference system
   st_transform(crs = 4326)
 # retrieve coordinates from geospatial dataframe
-coords <- dplyr::as_tibble(st_coordinates(occurrences))
+coords <- as_tibble(st_coordinates(occurrences))
 # convert back to standard data.frame attaching new coordinates
 occurrences <- 
-  dplyr::as_tibble(occurrences) %>% 
-  dplyr::bind_cols(coords) %>%
-  dplyr::select(-.data$geometry)
+  as_tibble(occurrences) %>% 
+  bind_cols(coords) %>%
+  select(-.data$geometry)
 ```
 
 ```{r include = FALSE}
@@ -246,7 +246,7 @@ Preview:
 
 ```{r show_hashes}
 occurrences %>%
-  select(dplyr::starts_with("species")) %>%
+  select(starts_with("species")) %>%
   distinct()
 ```
 
@@ -298,7 +298,7 @@ write_csv(dwc_occurrence, here::here("data", "processed", "occurrence.csv"),
 
 # Test output
 
-Load tests and run them to validate the data:
+Load tests and run them to validate the DwC mapping:
 
 ```{r run_tests, message = TRUE}
 source(here("tests", "test_dwc_event_occurrence.R"))

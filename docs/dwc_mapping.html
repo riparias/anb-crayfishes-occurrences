@@ -380,32 +380,15 @@ if (!all(required %in% installed)) {
   install.packages(required[!required %in% installed])
 }</code></pre>
 <p>Load packages:</p>
-<pre class="r"><code>library(tidyverse)      # To do data science</code></pre>
-<pre><code>## Warning: package &#39;tidyverse&#39; was built under R version 4.2.1</code></pre>
-<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 4.2.1</code></pre>
-<pre><code>## Warning: package &#39;tibble&#39; was built under R version 4.2.1</code></pre>
-<pre><code>## Warning: package &#39;tidyr&#39; was built under R version 4.2.1</code></pre>
-<pre><code>## Warning: package &#39;readr&#39; was built under R version 4.2.1</code></pre>
-<pre><code>## Warning: package &#39;purrr&#39; was built under R version 4.2.1</code></pre>
-<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 4.2.1</code></pre>
-<pre><code>## Warning: package &#39;stringr&#39; was built under R version 4.2.1</code></pre>
-<pre><code>## Warning: package &#39;forcats&#39; was built under R version 4.2.1</code></pre>
-<pre class="r"><code>library(tidylog)        # To provide feedback on dplyr functions</code></pre>
-<pre><code>## Warning: package &#39;tidylog&#39; was built under R version 4.2.1</code></pre>
-<pre class="r"><code>library(here)           # To find files</code></pre>
-<pre><code>## Warning: package &#39;here&#39; was built under R version 4.2.1</code></pre>
-<pre class="r"><code>library(readxl)         # To read Excel files</code></pre>
-<pre><code>## Warning: package &#39;readxl&#39; was built under R version 4.2.1</code></pre>
-<pre class="r"><code>library(sf)             # To convert coordinate systems</code></pre>
-<pre><code>## Warning: package &#39;sf&#39; was built under R version 4.2.1</code></pre>
-<pre class="r"><code>library(DBI)            # To work with databases</code></pre>
-<pre><code>## Warning: package &#39;DBI&#39; was built under R version 4.2.1</code></pre>
-<pre class="r"><code>library(RSQLite)        # To work with SQLite databases in R</code></pre>
-<pre><code>## Warning: package &#39;RSQLite&#39; was built under R version 4.2.1</code></pre>
-<pre class="r"><code>library(digest)         # To create hashes</code></pre>
-<pre><code>## Warning: package &#39;digest&#39; was built under R version 4.2.1</code></pre>
-<pre class="r"><code>library(testthat)       # To perform tests</code></pre>
-<pre><code>## Warning: package &#39;testthat&#39; was built under R version 4.2.1</code></pre>
+<pre class="r"><code>library(tidyverse)      # To do data science
+library(tidylog)        # To provide feedback on dplyr functions
+library(here)           # To find files
+library(readxl)         # To read Excel files
+library(sf)             # To convert coordinate systems
+library(DBI)            # To work with databases
+library(RSQLite)        # To work with SQLite databases in R
+library(digest)         # To create hashes
+library(testthat)       # To perform tests</code></pre>
 </div>
 <div id="read-source-data" class="section level1" number="2">
 <h1><span class="header-section-number">2</span> Read source data</h1>
@@ -447,14 +430,14 @@ two columns called <code>species</code> and <code>n</code>:</p>
 <pre class="r"><code>occurrences &lt;- 
   occurrences %&gt;%
   tidyr::pivot_longer(
-    cols = dplyr::one_of(ias_crayfishes), 
+    cols = one_of(ias_crayfishes), 
     names_to = &quot;species&quot;, 
     values_to = &quot;n&quot;
   )</code></pre>
 <p>Set <code>n</code> to 0 if <code>NA</code>:</p>
 <pre class="r"><code>occurrences &lt;- 
   occurrences %&gt;%
-  mutate(n = dplyr::if_else(is.na(.data$n), 0, .data$n))</code></pre>
+  mutate(n = if_else(is.na(.data$n), 0, .data$n))</code></pre>
 <p>Example tidy transformation:</p>
 <pre class="r"><code>occurrences %&gt;% 
   select(locatie, species, n) %&gt;%
@@ -472,8 +455,8 @@ identifiers</h2>
 <p>Some location identifiers are just numbers. Notice that they all have
 a non empty description (column <code>omschrijving</code>):</p>
 <pre class="r"><code>occurrences %&gt;%
-  dplyr::filter(!grepl(&quot;\\D&quot;, locatie)) %&gt;%
-  dplyr::distinct(locatie, omschrijving)</code></pre>
+  filter(!grepl(&quot;\\D&quot;, locatie)) %&gt;%
+  distinct(locatie, omschrijving)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["locatie"],"name":[1],"type":["chr"],"align":["left"]},{"label":["omschrijving"],"name":[2],"type":["chr"],"align":["left"]}],"data":[{"1":"138","2":"Park Tervuren"},{"1":"139","2":"Park Tervuren"},{"1":"140","2":"Park Tervuren"},{"1":"141","2":"Park Tervuren"},{"1":"142","2":"Park Tervuren"},{"1":"143","2":"Park Tervuren"},{"1":"144","2":"Park Tervuren"},{"1":"145","2":"Park Tervuren"},{"1":"146","2":"Park Tervuren"},{"1":"147","2":"Park Tervuren"},{"1":"148","2":"Park Tervuren"},{"1":"149","2":"Park Tervuren"},{"1":"150","2":"Park Tervuren"},{"1":"151","2":"Park Tervuren"},{"1":"152","2":"Park Tervuren"},{"1":"153","2":"Park Tervuren"},{"1":"156","2":"Park Tervuren"},{"1":"157","2":"Park Tervuren"},{"1":"158","2":"Park Tervuren"},{"1":"159","2":"Park Tervuren"},{"1":"160","2":"Park Tervuren"},{"1":"161","2":"Park Tervuren"},{"1":"162","2":"Park Tervuren"},{"1":"163","2":"Park Tervuren"},{"1":"164","2":"Park Tervuren"},{"1":"165","2":"Park Tervuren"},{"1":"166","2":"Park Tervuren"},{"1":"167","2":"Park Tervuren"},{"1":"168","2":"Park Tervuren"},{"1":"169","2":"Park Tervuren"},{"1":"171","2":"Zonienwoud"},{"1":"172","2":"Zonienwoud"},{"1":"173","2":"Zonienwoud"},{"1":"174","2":"Zonienwoud"},{"1":"175","2":"Zonienwoud"},{"1":"176","2":"Zonienwoud"},{"1":"177","2":"Zonienwoud"},{"1":"178","2":"Zonienwoud"},{"1":"179","2":"Zonienwoud"},{"1":"180","2":"Zonienwoud"},{"1":"181","2":"Zonienwoud"},{"1":"182","2":"Zonienwoud"},{"1":"183","2":"Zonienwoud"},{"1":"184","2":"Zonienwoud"},{"1":"185","2":"Zonienwoud"},{"1":"186","2":"Zonienwoud"},{"1":"187","2":"Zonienwoud"},{"1":"188","2":"Zonienwoud"},{"1":"189","2":"Zonienwoud"},{"1":"190","2":"Zonienwoud"},{"1":"191","2":"Zonienwoud"},{"1":"192","2":"Zonienwoud"},{"1":"193","2":"Zonienwoud"},{"1":"194","2":"Zonienwoud"},{"1":"195","2":"Zonienwoud"},{"1":"196","2":"Zonienwoud"},{"1":"197","2":"Zonienwoud"},{"1":"198","2":"Zonienwoud"},{"1":"199","2":"Domein Hofstade"},{"1":"200","2":"Domein Hofstade"},{"1":"201","2":"Domein Hofstade"},{"1":"202","2":"Domein Hofstade"},{"1":"203","2":"Domein Hofstade"},{"1":"205","2":"Domein Hofstade"},{"1":"206","2":"Domein Hofstade"},{"1":"207","2":"Domein Hofstade"},{"1":"208","2":"Domein Hofstade"},{"1":"209","2":"Domein Hofstade"},{"1":"210","2":"Domein Hofstade"},{"1":"211","2":"Domein Hofstade"},{"1":"212","2":"Domein Hofstade"},{"1":"213","2":"Domein Hofstade"},{"1":"214","2":"Domein Hofstade"},{"1":"215","2":"Domein Hofstade"},{"1":"216","2":"Domein Hofstade"},{"1":"217","2":"Domein Hofstade"},{"1":"218","2":"Domein Hofstade"},{"1":"219","2":"Domein Hofstade"},{"1":"220","2":"Domein Hofstade"},{"1":"221","2":"Domein Hofstade"},{"1":"222","2":"Domein Hofstade"},{"1":"223","2":"Domein Hofstade"},{"1":"224","2":"Domein Hofstade"},{"1":"225","2":"Domein Hofstade"},{"1":"226","2":"Domein Hofstade"},{"1":"227","2":"Domein Hofstade"},{"1":"228","2":"Domein Hofstade"},{"1":"229","2":"Domein Hofstade"},{"1":"230","2":"Domein Hofstade"},{"1":"231","2":"Domein Hofstade"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -508,7 +491,7 @@ letter of each word in <code>omschrijving</code> and the number in
 <p>Other locations should not be changed. Example:</p>
 <pre class="r"><code>occurrences %&gt;%
   filter(grepl(&quot;\\D&quot;, locatie)) %&gt;% 
-  dplyr::distinct(locatie, omschrijving, location) %&gt;%
+  distinct(locatie, omschrijving, location) %&gt;%
   head(10)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -522,24 +505,23 @@ number="3.3">
 coordinates</h2>
 <p>Some rows contain suspicious coordinates:</p>
 <pre class="r"><code>occurrences %&gt;%
-  dplyr::filter(locatie == as.numeric(locatie)) %&gt;%
+  filter(!grepl(&quot;\\D&quot;, locatie)) %&gt;%
   distinct(x, y)</code></pre>
-<pre><code>## Warning in mask$eval_all_filter(dots, env_filter): NAs introduced by coercion</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["x"],"name":[1],"type":["chr"],"align":["left"]},{"label":["y"],"name":[2],"type":["chr"],"align":["left"]}],"data":[{"1":"1622991038","2":"1690749063"},{"1":"1621265637","2":"169050.25"},{"1":"1618528538","2":"1691199219"},{"1":"1616191689","2":"1690618906"},{"1":"1616761888","2":"1690184063"},{"1":"1617488819","2":"1690539531"},{"1":"1619189686","2":"1690739219"},{"1":"161982544","2":"1689993125"},{"1":"1621177947","2":"1688230781"},{"1":"162299325","2":"168892.25"},{"1":"1621207423","2":"1687675781"},{"1":"1620556857","2":"1687498594"},{"1":"1619582444","2":"1685993438"},{"1":"1619173489","2":"1685518594"},{"1":"1618158634","2":"1684103594"},{"1":"1617162902","2":"1683244688"},{"1":"1614249634","2":"1679964375"},{"1":"1614134032","2":"1679984219"},{"1":"1615325499","2":"168191125"},{"1":"1616763054","2":"1683400625"},{"1":"1615231071","2":"1689851406"},{"1":"1614582763","2":"1688654219"},{"1":"1612526112","2":"1688093438"},{"1":"161134441","2":"1687215469"},{"1":"1608148365","2":"1685336563"},{"1":"1608491127","2":"1684495156"},{"1":"1606746254","2":"1683992031"},{"1":"1607014843","2":"1683237344"},{"1":"1609836556","2":"1683965156"},{"1":"1609932441","2":"1683935313"},{"1":"155220917","2":"1619287188"},{"1":"1545775443","2":"1616255313"},{"1":"1545784836","2":"1616798281"},{"1":"154539911","2":"161660875"},{"1":"1544638191","2":"1616275469"},{"1":"1544379143","2":"1616434375"},{"1":"1543921089","2":"1615842188"},{"1":"1542898965","2":"1615693438"},{"1":"1540483924","2":"1614999531"},{"1":"1540453572","2":"1615019531"},{"1":"1542852253","2":"1615873594"},{"1":"1544775829","2":"1616196719"},{"1":"1561482726","2":"161882.25"},{"1":"1560754216","2":"1620436719"},{"1":"1560957555","2":"1621481563"},{"1":"156077428","2":"1623167656"},{"1":"1560556556","2":"1623563438"},{"1":"1557833489","2":"1622565781"},{"1":"1557400541","2":"1622418438"},{"1":"1556396726","2":"1621804531"},{"1":"155645515","2":"1621919063"},{"1":"1555950287","2":"1621728281"},{"1":"1554874632","2":"1620981875"},{"1":"155472158","2":"1620959531"},{"1":"1561250556","2":"1618887813"},{"1":"156111155","2":"1620107969"},{"1":"1561331349","2":"1619762188"},{"1":"1561542716","2":"1618799063"},{"1":"1595089214","2":"1861148906"},{"1":"1594077267","2":"1861974688"},{"1":"1594419363","2":"1862283594"},{"1":"1594439701","2":"1862296875"},{"1":"1592722992","2":"1863418438"},{"1":"1592872218","2":"1863603438"},{"1":"1596458395","2":"1860814375"},{"1":"1595903686","2":"186231625"},{"1":"1593811037","2":"1863579531"},{"1":"1592275893","2":"1864893906"},{"1":"1593470762","2":"1864982813"},{"1":"1594595991","2":"1865140625"},{"1":"1597021766","2":"1864063906"},{"1":"159694654","2":"1864489688"},{"1":"1600145714","2":"1863284375"},{"1":"1600596932","2":"186378.25"},{"1":"1603875086","2":"1860726406"},{"1":"1600364652","2":"185865375"},{"1":"1597022051","2":"1859799844"},{"1":"1598529501","2":"185915625"},{"1":"1603948122","2":"1865959531"},{"1":"1602213605","2":"1868941875"},{"1":"1602061166","2":"1867920469"},{"1":"1600876556","2":"186873125"},{"1":"1601288169","2":"1866842031"},{"1":"1600903324","2":"186652875"},{"1":"1598055267","2":"1868532344"},{"1":"1597569283","2":"1868235469"},{"1":"1594190013","2":"1865990938"},{"1":"1594659972","2":"1864710313"},{"1":"1598525583","2":"1864156719"},{"1":"1602899356","2":"1859510781"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<p>The decimal point, if missing, has to be set after six digits from
-left:</p>
-<pre class="r"><code># add point after six digits
+<p>The decimal separator (<code>.</code>), if missing, has to be set
+after six digits from left:</p>
+<pre class="r"><code># add dot after six digits
 occurrences$x_improved &lt;- gsub(&quot;^(.{6})(.*)$&quot;,
                       &quot;\\1\\.\\2&quot;,
                       occurrences$x)
 occurrences$y_improved &lt;- gsub(&quot;^(.{6})(.*)$&quot;,
                       &quot;\\1\\.\\2&quot;,
                       occurrences$y)
-# remove duplicate points
+# remove duplicate dots
 occurrences$x_improved &lt;- gsub(&quot;(\\.)\\1+&quot;, &quot;\\1&quot;, occurrences$x_improved)
 occurrences$y_improved &lt;- gsub(&quot;(\\.)\\1+&quot;, &quot;\\1&quot;, occurrences$y_improved)</code></pre>
 <p>See changes:</p>
@@ -564,18 +546,18 @@ data in WGS84 (<a href="https://epsg.io/4326">EPSG 4326</a>) only.</p>
   mutate(x_lambert = x_improved,
          y_lambert = y_improved) %&gt;%
   # transform to numeric
-  dplyr::mutate(across(dplyr::ends_with(&quot;improved&quot;), as.numeric)) %&gt;%
+  mutate(across(ends_with(&quot;improved&quot;), as.numeric)) %&gt;%
   # transform to a geospatial dataframe
   st_as_sf(crs = st_crs(31370), coords = c(&quot;x_improved&quot;, &quot;y_improved&quot;)) %&gt;%
   # transform corodinate reference system
   st_transform(crs = 4326)
 # retrieve coordinates from geospatial dataframe
-coords &lt;- dplyr::as_tibble(st_coordinates(occurrences))
+coords &lt;- as_tibble(st_coordinates(occurrences))
 # convert back to standard data.frame attaching new coordinates
 occurrences &lt;- 
-  dplyr::as_tibble(occurrences) %&gt;% 
-  dplyr::bind_cols(coords) %&gt;%
-  dplyr::select(-.data$geometry)</code></pre>
+  as_tibble(occurrences) %&gt;% 
+  bind_cols(coords) %&gt;%
+  select(-.data$geometry)</code></pre>
 <p>Preview:</p>
 <pre class="r"><code>occurrences %&gt;% head(5)</code></pre>
 <div data-pagedtable="false">
@@ -601,7 +583,7 @@ occurrences &lt;-
   mutate(species_name_hash = vdigest(.data$species, algo = &quot;md5&quot;))</code></pre>
 <p>Preview:</p>
 <pre class="r"><code>occurrences %&gt;%
-  select(dplyr::starts_with(&quot;species&quot;)) %&gt;%
+  select(starts_with(&quot;species&quot;)) %&gt;%
   distinct()</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -651,7 +633,7 @@ write_csv(dwc_occurrence, here::here(&quot;data&quot;, &quot;processed&quot;, &q
 </div>
 <div id="test-output" class="section level1" number="7">
 <h1><span class="header-section-number">7</span> Test output</h1>
-<p>Load tests and run them to validate the data:</p>
+<p>Load tests and run them to validate the DwC mapping:</p>
 <pre class="r"><code>source(here(&quot;tests&quot;, &quot;test_dwc_event_occurrence.R&quot;))</code></pre>
 <pre><code>## Rows: 256 Columns: 23
 ## ── Column specification ────────────────────────────────────────────────────────
@@ -671,22 +653,22 @@ write_csv(dwc_occurrence, here::here(&quot;data&quot;, &quot;processed&quot;, &q
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre><code>## Test passed 🎉
-## Test passed 🥇
-## Test passed 🌈
-## Test passed 😀
-## Test passed 🥇
-## Test passed 😀
-## Test passed 😀
+<pre><code>## Test passed 🌈
 ## Test passed 🎊
+## Test passed 🥳
 ## Test passed 🎉
-## Test passed 🎊
-## Test passed 🎊
+## Test passed 🎉
 ## Test passed 🥇
 ## Test passed 😸
-## Test passed 🎊
 ## Test passed 🎉
-## Test passed 😀</code></pre>
+## Test passed 🥳
+## Test passed 🥳
+## Test passed 🌈
+## Test passed 🌈
+## Test passed 🎊
+## Test passed 😀
+## Test passed 😀
+## Test passed 🌈</code></pre>
 </div>
 
 
