@@ -282,3 +282,12 @@ write_csv(
   na = ""
 )
 ```
+
+# Test output
+
+Load tests and run them to validate the data:
+
+```{r run_tests, message = TRUE}
+source(here("tests", "test_dwc_event_occurrence.R"))
+```
+

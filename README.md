@@ -32,6 +32,8 @@ The repository structure is based on [Cookiecutter Data Science](http://drivenda
 │   ├── dwc_mapping.Rmd    : Darwin Core mapping script
 │   ├── _site.yml          : Settings to build website in docs/
 │   └── index.Rmd          : Template for website homepage
+├── tests
+│   └── test_dwc_occurrence.R : some basic tests to check DwC mapping
 │
 ├── docs                   : Repository website GENERATED
 │
