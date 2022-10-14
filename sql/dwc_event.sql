@@ -18,7 +18,7 @@ SELECT DISTINCT
 -- LOCATION
   'BE'                                  AS countryCode,
   'Flanders'                            AS stateProvince,
-  o."omschrijving"                      AS verbatimLocalityProperty,
+  o."omschrijving"                      AS locality,
   printf('%.5f', ROUND(o."Y", 5))       AS decimalLatitude,
   printf('%.5f', ROUND(o."X", 5))       AS decimalLongitude,
   'WGS84'                               AS geodeticDatum,
