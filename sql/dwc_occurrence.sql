@@ -19,6 +19,7 @@ SELECT
   o."opmerking"                         AS occurrenceRemarks,
 -- TAXON
   o."species"                           AS scientificName,
-  'Animalia'                            AS kingdom
+  'Animalia'                            AS kingdom,
+  'species'                             AS taxonRank
   FROM occurrences AS o
   WHERE  o."code" <= 1
