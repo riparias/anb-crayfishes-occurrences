@@ -6,9 +6,8 @@ SELECT DISTINCT
 -- RECORD-LEVEL
   'Event'                               AS type,
   'en'                                  AS language,
-  'https://creativecommons.org/licenses/by-nc/4.0/legalcode' AS license,
+  'http://creativecommons.org/publicdomain/zero/1.0/' AS license,
   'ANB'                                 AS rightsHolder,
-  'http://www.inbo.be/en/norms-for-data-use' AS accessRights,
   ''                                    AS datasetID,
   'ANB'                                 AS institutionCode,
   'Monitoring of invasive alien crayfishes in the Flemish part of the LIFE RIPARIAS areas' AS datasetName,
@@ -17,17 +16,18 @@ SELECT DISTINCT
   o."location" || ':' || o."datum"      AS eventID,
   date(o."datum")                       AS eventDate,
 -- LOCATION
-  o."location"                          AS locationID,
-  'Europe'                              AS continent,
   'BE'                                  AS countryCode,
+  /* uncomment if needed
   'Flanders'                            AS stateProvince,
-  o."omschrijving"                      AS verbatimLocalityProperty,
+  */
+  o."omschrijving"                      AS locality,
   printf('%.5f', ROUND(o."Y", 5))       AS decimalLatitude,
   printf('%.5f', ROUND(o."X", 5))       AS decimalLongitude,
   'WGS84'                               AS geodeticDatum,
   '30'                                  AS coordinateUncertaintyInMeters,
-  o."y_lambert"                         AS verbatimLatitude,
-  o."x_lambert"                         AS verbatimLongitude,
+  CAST(o."y_lambert" AS INT)            AS verbatimLatitude,
+  CAST(o."x_lambert" AS INT)            AS verbatimLongitude,
+  'Lambert coordinates'                 AS verbatimCoordinateSystem,
   'EPSG:31370'                          AS verbatimSRS
   FROM occurrences AS o
   WHERE

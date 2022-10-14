@@ -17,24 +17,21 @@ testthat::test_that("Right columns in right order in event core", {
     "language",
     "license",
     "rightsHolder",
-    "accessRights",
     "datasetID",
     "institutionCode",
     "datasetName",
     "samplingProtocol",
     "eventID",
     "eventDate",
-    "locationID",
-    "continent",
     "countryCode",
-    "stateProvince",
-    "verbatimLocalityProperty",
+    "locality",
     "decimalLatitude",
     "decimalLongitude",
     "geodeticDatum",
     "coordinateUncertaintyInMeters",
     "verbatimLatitude",
     "verbatimLongitude",
+    "verbatimCoordinateSystem",
     "verbatimSRS"
   )
   testthat::expect_equal(names(dwc_event), columns_event)
@@ -48,10 +45,6 @@ testthat::test_that("eventID is always present and is unique in event core", {
 
 testthat::test_that("eventDate is always filled in", {
   testthat::expect_true(all(!is.na(dwc_event$eventDate)))
-})
-
-testthat::test_that("locationID is always filled in", {
-  testthat::expect_true(all(!is.na(dwc_event$locationID)))
 })
 
 testthat::test_that("decimalLatitude is always filled in", {
@@ -72,6 +65,26 @@ testthat::test_that("decimalLongitude is within Flemish boundaries", {
   testthat::expect_true(all(dwc_event$decimalLongitude > 2.450))
 })
 
+testthat::test_that("verbatimLongitude is always filled in", {
+  testthat::expect_true(all(!is.na(dwc_event$verbatimLongitude)))
+})
+
+testthat::test_that("verbatimLongitude is always a positive integer", {
+  testthat::expect_true(
+    all(dwc_event$verbatimLongitude == as.integer(dwc_event$verbatimLongitude))
+  )
+})
+
+testthat::test_that("verbatimLatitude is always filled in", {
+  testthat::expect_true(all(!is.na(dwc_event$verbatimLatitude)))
+})
+
+testthat::test_that("verbatimLatitude is always a positive integer", {
+  testthat::expect_true(
+    all(dwc_event$verbatimLatitude == as.integer(dwc_event$verbatimLatitude))
+  )
+})
+
 # test occurrence extension
 
 testthat::test_that("Right columns in right order in occurrence extension", {
@@ -79,11 +92,12 @@ testthat::test_that("Right columns in right order in occurrence extension", {
     "eventID",
     "basisOfRecord",
     "occurrenceID",
-    "occurrenceRemarks",
     "individualCount",
     "occurrenceStatus",
+    "occurrenceRemarks",
     "scientificName",
-    "kingdom"
+    "kingdom",
+    "taxonRank"
   )
   testthat::expect_equal(names(dwc_occurrence), columns_occ)
 })
