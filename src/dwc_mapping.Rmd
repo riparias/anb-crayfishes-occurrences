@@ -184,12 +184,15 @@ occurrences$y_improved <- gsub("^(.{6})(.*)$",
 # remove duplicate dots
 occurrences$x_improved <- gsub("(\\.)\\1+", "\\1", occurrences$x_improved)
 occurrences$y_improved <- gsub("(\\.)\\1+", "\\1", occurrences$y_improved)
+# remove dot at the end
+occurrences$x_improved <- gsub("\\.$", "", occurrences$x_improved)
+occurrences$y_improved <- gsub("\\.$", "", occurrences$y_improved)
 ```
 
 See changes:
 
 ```{r show_changes}
-occurrences %>% select(x, y, x_improved, y_improved)
+occurrences %>% distinct(x, y, x_improved, y_improved)
 ```
 
 ## Change coordinate system
