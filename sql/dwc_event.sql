@@ -6,7 +6,7 @@ SELECT DISTINCT
 -- RECORD-LEVEL
   'Event'                               AS type,
   'en'                                  AS language,
-  'https://creativecommons.org/licenses/by-nc/4.0/legalcode' AS license,
+  'http://creativecommons.org/publicdomain/zero/1.0/' AS license,
   'ANB'                                 AS rightsHolder,
   'http://www.inbo.be/en/norms-for-data-use' AS accessRights,
   ''                                    AS datasetID,
