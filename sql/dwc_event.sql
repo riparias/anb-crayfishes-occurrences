@@ -8,7 +8,6 @@ SELECT DISTINCT
   'en'                                  AS language,
   'http://creativecommons.org/publicdomain/zero/1.0/' AS license,
   'ANB'                                 AS rightsHolder,
-  'http://www.inbo.be/en/norms-for-data-use' AS accessRights,
   ''                                    AS datasetID,
   'ANB'                                 AS institutionCode,
   'Monitoring of invasive alien crayfishes in the Flemish part of the LIFE RIPARIAS areas' AS datasetName,
@@ -17,8 +16,6 @@ SELECT DISTINCT
   o."location" || ':' || o."datum"      AS eventID,
   date(o."datum")                       AS eventDate,
 -- LOCATION
-  o."location"                          AS locationID,
-  'Europe'                              AS continent,
   'BE'                                  AS countryCode,
   'Flanders'                            AS stateProvince,
   o."omschrijving"                      AS verbatimLocalityProperty,
