@@ -17,9 +17,6 @@ SELECT DISTINCT
   date(o."datum")                       AS eventDate,
 -- LOCATION
   'BE'                                  AS countryCode,
-  /* uncomment if needed
-  'Flanders'                            AS stateProvince,
-  */
   o."omschrijving"                      AS locality,
   printf('%.5f', ROUND(o."Y", 5))       AS decimalLatitude,
   printf('%.5f', ROUND(o."X", 5))       AS decimalLongitude,
