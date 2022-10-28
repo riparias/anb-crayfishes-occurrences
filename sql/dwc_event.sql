@@ -8,7 +8,7 @@ SELECT DISTINCT
   'en'                                  AS language,
   'http://creativecommons.org/publicdomain/zero/1.0/' AS license,
   'ANB'                                 AS rightsHolder,
-  ''                                    AS datasetID,
+  'https://doi.org/10.15468/c2kc7t'     AS datasetID,
   'ANB'                                 AS institutionCode,
   'Monitoring of invasive alien crayfishes in the Flemish part of the LIFE RIPARIAS areas' AS datasetName,
   'targeted monitoring'                 AS samplingProtocol,

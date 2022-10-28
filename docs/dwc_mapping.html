@@ -11,7 +11,7 @@
 
 <meta name="author" content="Damiano Oldoni" />
 
-<meta name="date" content="2022-10-19" />
+<meta name="date" content="2022-10-28" />
 
 <title>Darwin Core mapping</title>
 
@@ -356,7 +356,7 @@ div.tocify {
 <h3 class="subtitle">For: monitoring of invasive alien crayfishes in the
 Flemish part of the LIFE RIPARIAS areas</h3>
 <h4 class="author">Damiano Oldoni</h4>
-<h4 class="date">2022-10-19</h4>
+<h4 class="date">2022-10-28</h4>
 
 </div>
 
@@ -639,41 +639,40 @@ write_csv(dwc_occurrence, here::here(&quot;data&quot;, &quot;processed&quot;, &q
 <p>Load tests and run them to validate the DwC mapping:</p>
 <pre class="r"><code>source(here(&quot;tests&quot;, &quot;test_dwc_event_occurrence.R&quot;))</code></pre>
 <pre><code>## Rows: 256 Columns: 20
-## ── Column specification ────────────────────────────────────────────────────────
+## ── Column specification ────────────
 ## Delimiter: &quot;,&quot;
-## chr  (13): type, language, license, rightsHolder, institutionCode, datasetNa...
+## chr  (14): type, language, license, rightsHolder, datasetID, institutionCode...
 ## dbl   (5): decimalLatitude, decimalLongitude, coordinateUncertaintyInMeters,...
-## lgl   (1): datasetID
 ## date  (1): eventDate
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 ## Rows: 1792 Columns: 9
-## ── Column specification ────────────────────────────────────────────────────────
+## ── Column specification ────────────
 ## Delimiter: &quot;,&quot;
 ## chr (8): eventID, basisOfRecord, occurrenceID, occurrenceStatus, occurrenceR...
 ## dbl (1): individualCount
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre><code>## Test passed 🥳
-## Test passed 🎊
-## Test passed 🎊
-## Test passed 😸
+<pre><code>## Test passed 🌈
+## Test passed 🥇
+## Test passed 🥇
+## Test passed 🥇
 ## Test passed 🎉
-## Test passed 😸
+## Test passed 🥳
+## Test passed 🎊
 ## Test passed 😸
 ## Test passed 🥳
 ## Test passed 🥇
-## Test passed 😀
-## Test passed 🌈
 ## Test passed 🎊
-## Test passed 😀
-## Test passed 😀
+## Test passed 🥳
 ## Test passed 😀
 ## Test passed 🎉
-## Test passed 🌈
 ## Test passed 🥳
+## Test passed 🎊
+## Test passed 🎉
+## Test passed 🌈
 ## Test passed 🎊</code></pre>
 </div>
 
