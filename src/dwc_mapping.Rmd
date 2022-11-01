@@ -290,6 +290,12 @@ dwc_occurrence <- DBI::dbGetQuery(con, dwc_occurrence_sql)
 message("DONE")
 ```
 
+Close connection to sqlite database:
+
+```{r close_conn}
+DBI::dbDisconnect(con)
+```
+
 # Save data to CSV
 
 ```{r save_csv}
