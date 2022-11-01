@@ -11,6 +11,7 @@ SELECT DISTINCT
   'https://doi.org/10.15468/c2kc7t'     AS datasetID,
   'ANB'                                 AS institutionCode,
   'Monitoring of invasive alien crayfishes in the Flemish part of the LIFE RIPARIAS areas' AS datasetName,
+  'HumanObservation'                    AS basisOfRecord,
   'targeted monitoring'                 AS samplingProtocol,
 -- EVENT
   o."location" || ':' || o."datum"      AS eventID,
